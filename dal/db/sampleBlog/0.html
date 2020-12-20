@@ -1,0 +1,54 @@
+<div id="article_content" class="article_content clearfix">
+    <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-b5506197d8.css">
+            <div id="content_views" class="htmledit_views">
+                <h1>安装Go1.15版本</h1> 
+<h1>大纲</h1> 
+<ul><li><a href="https://gitee.com/nbodyfun/golang_learning_notes/blob/master/2.%E5%AE%89%E8%A3%85go1.15/%E5%AE%89%E8%A3%85go1.15.md#Windows%E5%AE%89%E8%A3%85Go">Windows安装Go</a></li><li><a href="https://gitee.com/nbodyfun/golang_learning_notes/blob/master/2.%E5%AE%89%E8%A3%85go1.15/%E5%AE%89%E8%A3%85go1.15.md#Linux%E5%AE%89%E8%A3%85Go">Linux安装Go</a></li><li><a href="https://gitee.com/nbodyfun/golang_learning_notes/blob/master/2.%E5%AE%89%E8%A3%85go1.15/%E5%AE%89%E8%A3%85go1.15.md#MacOS%E5%AE%89%E8%A3%85Go">MacOS安装Go</a></li><li><a href="https://gitee.com/nbodyfun/golang_learning_notes/blob/master/2.%E5%AE%89%E8%A3%85go1.15/%E5%AE%89%E8%A3%85go1.15.md#Docker%E5%AE%89%E8%A3%85Go">Docker安装Go</a></li><li><a href="https://gitee.com/nbodyfun/golang_learning_notes/blob/master/2.%E5%AE%89%E8%A3%85go1.15/%E5%AE%89%E8%A3%85go1.15.md#%E6%80%BB%E7%BB%93">总结</a></li></ul>
+<p><strong>视频地址</strong>&#xff1a;<a href="https://www.bilibili.com/video/BV14a4y177XG?p&#61;3">https://www.bilibili.com/video/BV14a4y177XG?p&#61;3</a></p> 
+<h1>Windows安装Go</h1> 
+<p><strong>1.点击下载go1.15版本的msi安装包</strong></p> 
+<ul><li>64位系统 <a href="https://studygolang.com/dl/golang/go1.15.windows-amd64.msi">https://studygolang.com/dl/golang/go1.15.windows-amd64.msi</a></li><li>32位系统 <a href="https://studygolang.com/dl/golang/go1.15.windows-386.msi">https://studygolang.com/dl/golang/go1.15.windows-386.msi</a></li></ul>
+<p>如果机子不是老爷机&#xff0c;讲道理选64位通常没问题</p> 
+<p><strong>2.安装并选择一个安装目录</strong></p> 
+<p>默认情况下&#xff0c;会将Go安装在<code>C:\Go</code>目录下</p> 
+<p>如果你不喜欢装在C盘&#xff0c;可以自定义安装目录</p> 
+<p>然后一路next</p> 
+<p><strong>3.测试是否成功安装</strong></p> 
+<p>键盘按住<code>win</code>&#43;<code>r</code>&#xff0c;在弹出窗口中输入cmd然后点确定&#xff0c;弹出的黑框框就是命令行(控制台)</p> 
+<p>输入如下代码并回车</p> 
+<pre>go version</pre> 
+<p>如显示<strong>go version go1.15</strong>&#xff0c;证明可以进行愉快玩耍</p> 
+<p><strong>4.配置环境变量</strong></p> 
+<p>一般msi安装包会自动帮我们设置好相关的环境变量&#xff0c;这样才能在命令行里找到go这个程序</p> 
+<p>如果上一步不能正常显示go的版本&#xff0c;那么我们还得自己配置环境变量</p> 
+<p>假如go的安装目录是<code>C:\Go</code>&#xff0c;那么我们要把<code>C:\Go\bin</code>添加到PATH系统变量里</p> 
+<h1>Linux安装Go</h1> 
+<p><strong>1.获取下载地址</strong></p> 
+<ul><li>64位系统 <a href="https://studygolang.com/dl/golang/go1.15.linux-amd64.tar.gz">https://studygolang.com/dl/golang/go1.15.linux-amd64.tar.gz</a></li><li>32位系统 <a href="https://studygolang.com/dl/golang/go1.15.linux-386.tar.gz">https://studygolang.com/dl/golang/go1.15.linux-386.tar.gz</a></li></ul>
+<p>可以通过curl命令下载下来&#xff0c;比如下载64位的</p> 
+<pre>curl -O https://studygolang.com/dl/golang/go1.15.linux-amd64.tar.gz</pre> 
+<p><strong>2.解压文件</strong></p> 
+<p>在下载好的压缩包同级目录执行以下命令&#xff0c;表示将tar.gz文件解压至<code>/usr/local</code>目录</p> 
+<pre>sudo tar -C /usr/local -xzf go1.15.linux-amd64.tar.gz</pre> 
+<p><strong>3.配置环境变量</strong></p> 
+<p>然后我们将<code>/usr/local/go/bin</code>添加到<code>PATH</code>环境变量里&#xff0c;这样命令行才能找到go</p> 
+<p>一般通过将下面代码追加<code>export PATH&#61;$PATH:/usr/local/go/bin</code>至<code>/etc/profile</code>文件的结尾来达到该目的</p> 
+<pre>sudo sh -c &#39;echo &#34;export PATH&#61;\$PATH:/usr/local/go/bin&#34; &gt;&gt; /etc/profile&#39;</pre> 
+<p><strong>这样我们下次重新登录进计算机时&#xff0c;环境变量才会生效</strong></p> 
+<p>如果想立即生效&#xff0c;可以执行以下代码</p> 
+<pre>source /etc/profile</pre> 
+<h1>MacOS安装Go</h1> 
+<p>可以通过brew来安装go</p> 
+<pre>brew install go</pre> 
+<p>或者直接下载安装包<a href="https://studygolang.com/dl/golang/go1.15.darwin-amd64.pkg">https://studygolang.com/dl/golang/go1.15.darwin-amd64.pkg</a>&#xff0c;然后点击安装</p> 
+<p>这样会默认安装至<code>/usr/local/go</code>目录下</p> 
+<h1>Docker安装Go</h1> 
+<p>用docker安装go&#xff0c;可能不是最好的方法&#xff0c;但一定是最方便的方法</p> 
+<pre># 指定容器名为go115
+docker run -it --name go115 golang:1.15 /bin/bash</pre> 
+<p>你可以通过加上<code>-v ~:/home/me</code>参数&#xff0c;表示将家目录挂载到<code>/home/me</code>目录下&#xff0c;这样我们在容器内也能访问家目录</p> 
+<p>通过输入<code>exit</code>来退出容器&#xff0c;以后重新进入容器&#xff0c;只需要</p> 
+<pre>docker start -i go115</pre> 
+<h1>总结</h1> 
+<p>管他黑猫白猫&#xff0c;只要能安装成功就完事&#xff01;</p>
+            </div>

@@ -1,0 +1,95 @@
+        <div id="article_content" class="article_content clearfix">
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-b5506197d8.css">
+                <div id="content_views" class="htmledit_views">
+                    <p>使用Golang能够创建WebSocket通信&#xff0c;只需要使用golang.org/x/net/websocket包即可&#xff0c;该包有可能被墙&#xff0c;无法使用go get下载&#xff0c;但是我们可以从golang中国提供的<a href="https://www.golangtc.com/download/package">地址</a>下载&#xff0c;然后将包放在对应的路径下。</p> 
+<p>WebSocket是一种通信协议&#xff0c;旨在改善HTTP作为无状态协议通信的效率问题&#xff0c;WebSocket是客户端与服务器之间的全双工连接&#xff0c;客户端和服务器只需要建立一次连接就可以使用该连接进行通信。在我们的项目中&#xff0c;一般客户端是前端页面&#xff0c;使用JavaScript创建WebSocket与后端的WebSocket服务端进行通信。</p> 
+<p>下面首先看看我们的服务端代码</p> 
+<pre class="has"><code class="language-Go">package main
+
+import (
+	&#34;fmt&#34;
+	&#34;html/template&#34;
+	&#34;net/http&#34;
+	&#34;os&#34;
+	&#34;strings&#34;
+
+	&#34;golang.org/x/net/websocket&#34;
+)
+
+func upper(ws *websocket.Conn) {
+	var err error
+	for {
+		var reply string
+
+		if err &#61; websocket.Message.Receive(ws, &amp;reply); err !&#61; nil {
+			fmt.Println(err)
+			continue
+		}
+
+		if err &#61; websocket.Message.Send(ws, strings.ToUpper(reply)); err !&#61; nil {
+			fmt.Println(err)
+			continue
+		}
+	}
+}
+
+func index(w http.ResponseWriter, r *http.Request) {
+	if r.Method !&#61; &#34;GET&#34; {
+		return
+	}
+
+	t, _ :&#61; template.ParseFiles(&#34;index.html&#34;)
+	t.Execute(w, nil)
+}
+
+func main() {
+	http.Handle(&#34;/upper&#34;, websocket.Handler(upper))
+	http.HandleFunc(&#34;/&#34;, index)
+
+	if err :&#61; http.ListenAndServe(&#34;:9999&#34;, nil); err !&#61; nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
+</code></pre> 
+<p>我们从main函数看起&#xff0c;我们使用Golang的http包创建了一个Server&#xff0c;该Server能够处理两个请求&#xff0c;一个是/&#xff0c;这是Web项目的根路径&#xff0c;index函数作为处理方法&#xff0c;返回首页index.html。</p> 
+<p>Server还处理/upper请求&#xff0c;该请求的处理函数是一个WebSocket的处理函数&#xff0c;它包裹了我们自己定义的upper函数&#xff0c;upper函数有一个参数&#xff0c;就是服务端创建好的WebSocket连接&#xff0c;upper函数逻辑很简单&#xff0c;通过WebSocket连接读取服务器的请求内容&#xff0c;将内容转化为大写后&#xff0c;通过WebSocket将结果返回给客户端。</p> 
+<pre class="has"><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset&#61;&#34;utf-8&#34;/&gt;
+    &lt;title&gt;Websocket&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;字符串转换大写&lt;/h1&gt;
+    &lt;form&gt;
+        &lt;p&gt;
+            字符串: &lt;input id&#61;&#34;content&#34; type&#61;&#34;text&#34; placeholder&#61;&#34;输入要转换的字符串&#34;&gt;
+        &lt;/p&gt;
+    &lt;/form&gt;
+    &lt;label id&#61;&#34;result&#34;&gt;结果为&#xff1a;&lt;/label&gt;&lt;br&gt;&lt;br&gt;
+    &lt;button onclick&#61;&#34;send()&#34;&gt;转换&lt;/button&gt;
+
+    &lt;script type&#61;&#34;text/javascript&#34;&gt;
+        var sock &#61; null;
+        var wsuri &#61; &#34;ws://127.0.0.1:9999/upper&#34;;
+        sock &#61; new WebSocket(wsuri);
+        sock.onmessage &#61; function(e) {
+            var result &#61; document.getElementById(&#39;result&#39;);
+            result.innerHTML &#61; &#34;结果为&#xff1a;&#34; &#43; e.data;
+        }
+
+        function send() {
+            var msg &#61; document.getElementById(&#39;content&#39;).value;
+            sock.send(msg);
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre> 
+<p>前端页面我们主要看JavaScript代码部分&#xff0c;首先建立一个全局的WebSocket&#xff0c;之后点击转换按钮时&#xff0c;就会将input的内容通过WebSocket发送出去。WebSocket的onmessage函数用来处理服务端的响应&#xff0c;还有onerror&#xff0c;onclose等方法&#xff0c;分别是WebSocket的错误回调和关闭回调&#xff0c;本文并没有使用&#xff0c;一般用来处理资源回收和报错。</p> 
+<p>Golang可以很方便的使用WebSocket&#xff0c;只是使用websocket.Handler包裹一个处理函数即可。</p> 
+<p style="text-align:center;"><img alt="" class="has" src="https://img-blog.csdnimg.cn/20181027105839691.png?x-oss-process&#61;image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lqcDE5ODcxMDEz,size_27,color_FFFFFF,t_70" /></p> 
+<p> </p>
+                </div>
+        </div>

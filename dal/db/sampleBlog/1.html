@@ -1,0 +1,168 @@
+<div id="article_content" class="article_content clearfix">
+    <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-b5506197d8.css">
+            <div id="content_views" class="htmledit_views">
+                <p>Golang 是一门年轻的语言。它在设计上借鉴了传统 C 语言的高性能特性&#xff0c;又借鉴了多种现代系统语言的优点&#xff0c;被认为具有很大的潜力。要开发好 Golang&#xff0c;首先要掌握好相关的开发工具。</p> 
+<p>这里介绍如何快速安装和配置 Golang 环境、选用合适的编辑器和 IDE&#xff0c;以及如何配合使用 Golang 的配套开发工具来提高开发效率。</p> 
+<h3 id="安装与配置-golang-环境">安装与配置 Golang 环境</h3> 
+<p>Golang 环境安装十分简单&#xff0c;可以通过包管理器或自行下载方式进行&#xff0c;为了使用最新版本的 Golang 环境&#xff0c;推荐大家通过下载环境包方式进行安装。</p> 
+<p>首先&#xff0c;从 <a href="https://golang.org/dl/">https://golang.org/dl/</a> 页面查看最新的软件包&#xff0c;并根据自己的平台进行下载&#xff0c;例如 Linux 环境下&#xff0c;目前最新的环境包为 <a href="https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz">https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz</a>。</p> 
+<p>下载后&#xff0c;直接进行环境包的解压&#xff0c;存放到默认的 <code>/usr/local/go</code> 目录&#xff08;否则需要配置 $GOROOT 环境变量指向自定义位置&#xff09;下。</p> 
+<pre class="has"><code>$ sudo tar -C /usr/local -xzf go1.8.linux-amd64.tar.gz
+</code></pre> 
+<p>此时&#xff0c;查看 <code>/usr/local/go</code> 路径下&#xff0c;可能看到如下几个子目录。</p> 
+<ul><li>api&#xff1a;Go API 检查器的辅助文件&#xff0c;记录了各个版本的 API 特性。</li><li>bin&#xff1a;Go 语言相关的工具的二进制命令。</li><li>doc&#xff1a;存放文档。</li><li>lib&#xff1a;一些第三方库。</li><li>misc&#xff1a;编辑器和开发环境的支持插件。</li><li>pkg&#xff1a;存放不同平台的标准库的归档文件&#xff08;.a 文件&#xff09;。</li><li>src&#xff1a;所有实现的源码。</li><li>test&#xff1a;存放测试文件。</li></ul>
+<p>安装完毕后&#xff0c;可以添加 Golang 工具命令所在路径到系统路径&#xff0c;方便后面使用。并创建 <code>$GOPATH</code> 环境变量&#xff0c;指向某个本地创建好的目录&#xff08;如 $HOME/Go&#xff09;&#xff0c;作为后面 Golang 项目的存放目录。</p> 
+<p>添加如下环境变量到用户启动配置&#xff08;如 <code>$HOME/.bashrc</code>&#xff09;中。</p> 
+<pre class="has"><code>export PATH&#61;$PATH:/usr/local/go/bin
+export GOPATH&#61;$HOME/Go
+export GOROOT&#61;/usr/local/go
+</code></pre> 
+<p>其它更多平台下安装&#xff0c;可以参考 <a href="https://golang.org/doc/install">https://golang.org/doc/install</a>。</p> 
+<h3 id="编辑器与-ide">编辑器与 IDE</h3> 
+<p>使用传统编辑器如 VIM&#xff0c;可以安装相应的 Golang 支持插件&#xff0c;如 <a href="https://github.com/fatih/vim-go">vim-go</a>。</p> 
+<p>目前支持 Go 语言的 IDE&#xff08;Integrated Development Environment&#xff09; 还不是特别丰富。推荐使用 Jet Brains 出品的 Pycharm 或 Gogland。</p> 
+<p>Pycharm 本来是面向 Python 语言的 IDE 产品&#xff0c;但可以通过安装 Go 语言插件来支持 Go 语言。</p> 
+<p>Gogland 是专门针对 Go 语言设计的 IDE&#xff0c;在代码的补全、分析等方面性能更优越。可以从 <a href="https://www.jetbrains.com/go/">https://www.jetbrains.com/go/</a> 下载获取。</p> 
+<h3 id="高效开发工具">高效开发工具</h3> 
+<p>Go 语言自带了不少高效的工具和命令&#xff0c;使用好这些工具和命令&#xff0c;可以很方便地进行程序的维护、编译和调试。</p> 
+<p>go doc 和 godoc</p> 
+<p>go doc 可以快速显示指定软件包的帮助文档。</p> 
+<p>godoc 是一个类似的命令&#xff0c;功能更强大&#xff0c;它以 web 服务的形式提供文档&#xff0c;即允许用户通过浏览器查看软件包的文档。</p> 
+<p>可以通过如下命令进行快速安装。</p> 
+<pre class="has"><code>$ go get golang.org/x/tools/cmd/godoc
+</code></pre> 
+<p>godoc 命令使用格式如下。</p> 
+<pre class="has"><code>$ godoc package [name ...]
+</code></pre> 
+<p>比较有用的命令行参数包括&#xff1a;</p> 
+<ul><li><code>-http&#61;:PORT</code>&#xff1a;指定监听的地址&#xff0c;默认是 <code>:6060</code>。</li><li><code>-index</code>&#xff1a;支持关键词索引。</li><li><code>-play</code>&#xff1a;支持 Go 语言的 playground&#xff0c;用户可以在浏览器里面对 Go 语言进行测试。</li></ul>
+<p>例如&#xff0c;下面的命令将在本地快速启动一个类似 <a href="https://golang.org/">https://golang.org/</a> 的网站&#xff0c;包括本地软件包的文档和 playground 等。</p> 
+<pre class="has"><code>$ godoc -http&#61;:6060 -index -play
+</code></pre> 
+<p><img alt="godoc 启动本地网站" class="has" src="https://yeasy.gitbooks.io/blockchain_guide/content/appendix/_images/godoc.png" width="400" /></p> 
+<p>图 1.17.3.3.1 - godoc 启动本地网站</p> 
+<p>go build</p> 
+<p>编译软件包&#xff0c;例如编辑当前软件包内容。</p> 
+<pre class="has"><code>$ go build .
+</code></pre> 
+<p>支持如下参数&#xff1a;</p> 
+<ul><li><code>-x</code> 参数&#xff1a;可以打印出执行过程的详细信息&#xff0c;辅助调试。</li><li><code>-gcflags</code>&#xff1a;指定编译器参数。</li><li><code>-ldflags</code>&#xff1a;指定链接器参数&#xff0c;常见的可以通过 -X 来动态指定包变量值。</li></ul>
+<p>go clean</p> 
+<p>清理项目&#xff0c;删除编译生成的二进制文件和临时文件。使用格式如下</p> 
+<pre class="has"><code>$ go clean
+</code></pre> 
+<p>支持如下参数&#xff1a;</p> 
+<ul><li><code>-i</code> 参数&#xff1a;删除 go install 安装的文件。</li><li><code>-n</code> 参数&#xff1a;打印删除命令&#xff0c;而不执行&#xff0c;方便进行测试检查。</li><li><code>-r</code> 参数&#xff1a;递归清除&#xff0c;对依赖包也执行清理工作。</li><li><code>-x</code> 参数&#xff1a;执行清除过程同时打印执行的删除命令&#xff0c;方便进行测试检查。</li></ul>
+<p>go env</p> 
+<p>打印与 go 相关的环境变量&#xff0c;命令使用格式如下。</p> 
+<pre class="has"><code>$ go env [var ...]
+</code></pre> 
+<p>例如&#xff0c;通过如下命令查看所有跟 go 相关的环境变量。</p> 
+<pre class="has"><code>$ go env
+
+GOARCH&#61;&#34;amd64&#34;
+GOBIN&#61;&#34;&#34;
+GOEXE&#61;&#34;&#34;
+GOHOSTARCH&#61;&#34;amd64&#34;
+GOHOSTOS&#61;&#34;darwin&#34;
+GOOS&#61;&#34;darwin&#34;
+GOPATH&#61;&#34;/opt/Go&#34;
+GORACE&#61;&#34;&#34;
+GOROOT&#61;&#34;/usr/local/go/1.8.3/libexec&#34;
+GOTOOLDIR&#61;&#34;/usr/local/go/1.8.3/libexec/pkg/tool/darwin_amd64&#34;
+GCCGO&#61;&#34;gccgo&#34;
+CC&#61;&#34;clang&#34;
+GOGCCFLAGS&#61;&#34;-fPIC -m64 -pthread -fno-caret-diagnostics -Qunused-arguments -fmessage-length&#61;0 -fdebug-prefix-map&#61;/var/folders/d8/3h28zg552853gpp7ymrxl2r80000gn/T/go-build128111214&#61;/tmp/go-build -gno-record-gcc-switches -fno-common&#34;
+CXX&#61;&#34;clang&#43;&#43;&#34;
+CGO_ENABLED&#61;&#34;1&#34;
+PKG_CONFIG&#61;&#34;pkg-config&#34;
+CGO_CFLAGS&#61;&#34;-g -O2&#34;
+CGO_CPPFLAGS&#61;&#34;&#34;
+CGO_CXXFLAGS&#61;&#34;-g -O2&#34;
+CGO_FFLAGS&#61;&#34;-g -O2&#34;
+CGO_LDFLAGS&#61;&#34;-g -O2&#34;
+</code></pre> 
+<p>go fmt 和 gofmt</p> 
+<p>两者都是对代码进行格式化检查和修正。</p> 
+<p>go fmt 命令实际上是对 gofmt 工具进行了封装&#xff0c;默认调用 <code>gofmt -l -w</code> 命令。</p> 
+<p>gofmt 命令的使用格式如下。</p> 
+<pre class="has"><code>$ gofmt [flags] [path ...]
+</code></pre> 
+<p>支持如下参数&#xff1a;</p> 
+<ul><li><code>-d</code> 参数&#xff1a;仅显示不符合格式规定的地方&#xff0c;不进行修正。</li><li><code>-e</code> 参数&#xff1a;打印完整错误内容&#xff0c;默认是只打印 10 行。</li><li><code>-l</code> 参数&#xff1a;列出不符合格式规定的文件路径。</li><li><code>-r</code> 参数&#xff1a;重写的规则。</li><li><code>-s</code> 参数&#xff1a;对代码尝试进行简化。</li><li><code>-w</code> 参数&#xff1a;对不符合默认风格的代码进行修正。</li></ul>
+<p>go get</p> 
+<p>快速获取某个软件包并执行编译和安装&#xff0c;例如</p> 
+<pre class="has"><code>$ go get github.com/hyperledger/fabric
+</code></pre> 
+<p>支持如下参数&#xff1a;</p> 
+<ul><li><code>-u</code> 参数&#xff1a;可以强制更新到最新版。</li><li><code>-d</code> 参数&#xff1a;仅获取软件包&#xff0c;不执行编译安装。</li></ul>
+<p>go install</p> 
+<p>对本地软件包执行编译&#xff0c;并将编译好的二进制文件安装到 $GOPATH/bin。</p> 
+<p>等价于先执行 <code>go build</code> 命令&#xff0c;之后执行复制命令。</p> 
+<p>go list</p> 
+<p>列出本地包中的所有的导入依赖。</p> 
+<p>命令格式为</p> 
+<pre class="has"><code>$ go list [-e] [-f format] [-json] [build flags] [packages]
+</code></pre> 
+<p>其中&#xff0c;-e 可以指定忽略出错的包。</p> 
+<p>go run</p> 
+<p>编译并直接运行某个主程序包。</p> 
+<p>需要注意&#xff0c;该可以执行 <code>go run</code> 的程序包必须是主包&#xff0c;意味着包内必须有入口的主函数&#xff1a;main。</p> 
+<p>go test</p> 
+<p>执行软件包内带的测试用例&#xff08;<code>*_test.go</code> 文件&#xff09;&#xff0c;例如递归执行当前包内所有的测试案例。</p> 
+<pre class="has"><code>$ go test ./...
+</code></pre> 
+<p>支持如下参数&#xff1a;</p> 
+<ul><li><code>-v</code> 参数&#xff1a;可以参数来打开详细测试日志&#xff0c;辅助调试。</li></ul>
+<p>golint</p> 
+<p>对代码进行格式风格检查&#xff0c;打印出不符合 Go 语言推荐风格的代码。</p> 
+<p>安装该工具十分简单&#xff0c;通过如下命令即可快速安装。</p> 
+<pre class="has"><code>$ go get -u github.com/golang/lint/golint
+</code></pre> 
+<p>使用时&#xff0c;指定软件包路径即可&#xff0c;如对超级账本 Fabric 项目所有代码进行风格检查。</p> 
+<pre class="has"><code>$ golint $GOPATH/src/github.com/hyperledger/fabric/...
+</code></pre> 
+<p>注意后面的 <code>...</code> 代表递归检查所有子目录下内容。</p> 
+<p>goimports</p> 
+<p>也是代码风格检查工具&#xff0c;重点在于对 imports 相关格式进行检查&#xff0c;比较强大的是能自动修正。</p> 
+<p>安装该工具十分简单&#xff0c;通过如下命令即可快速安装。</p> 
+<pre class="has"><code>$ go get golang.org/x/tools/cmd/goimports
+</code></pre> 
+<p>使用时&#xff0c;也是指定软件包路径即可。</p> 
+<p>另外&#xff0c;goimports 支持几个很有用的参数。</p> 
+<p><code>-d</code>&#xff1a;仅显示修订&#xff0c;不实际写入文件。 <code>-e</code>&#xff1a;显示所有的错误。 <code>-l</code>&#xff1a;列出含有错误的文件路径。 <code>-w</code>&#xff1a;将修订直接写入文件&#xff0c;不显示出来。 <code>-srcdir</code>&#xff1a;指定对软件包进行查找的相对路径。</p> 
+<p>go tool</p> 
+<p><code>go tool</code> 命令中包括许多有用的工具子命令&#xff0c;包括 addr2line、api、asm、cgo、compile、cover、dist、doc、fix、link、nm、objdump、pack、pprof、trace、vet。</p> 
+<p>其中&#xff0c;比较常用的包括 vet 和 fix。</p> 
+<p>vet 对代码的准确性进行基本检查&#xff0c;如函数调用参数缺失、不可达代码&#xff0c;或调用格式不匹配等。</p> 
+<p>使用也十分简单&#xff0c;指定要检查的软件包路径即可。</p> 
+<p>fix 则可以对自动对旧版本的代码进行升级修复&#xff0c;替换为使用新版本的特性。</p> 
+<p>可以通过 <code>go tool cmd -h</code> 命令查看子目录具体支持的相关参数&#xff0c;在此不再赘述。</p> 
+<p>govendor 工具</p> 
+<p>长期以来&#xff0c;Golang 对外部依赖都没有很好的管理方式&#xff0c;只能从 <code>$GOPATH</code> 下查找依赖。这就造成不同用户在安装同一个项目时可能从外部获取到不同的依赖库版本&#xff0c;同时当无法联网时&#xff0c;无法编译依赖缺失的项目。</p> 
+<p>Golang 自 1.5 版本开始重视第三方依赖的管理&#xff0c;将项目依赖的外部包统一放到 vendor 目录下&#xff08;类比 Nodejs 的 node_modules 目录&#xff09;&#xff0c;并通过 vendor.json 文件来记录依赖包的版本&#xff0c;方便用户使用相对稳定的依赖。</p> 
+<p>Daniel Theophanes 等人开发了 govendor 工具&#xff0c;方便对第三方依赖进行管理。</p> 
+<p>govendor 的安装十分简单&#xff0c;可以通过 go get 命令&#xff1a;</p> 
+<pre class="has"><code>$ go get -u -v github.com/kardianos/govendor
+</code></pre> 
+<p>对于 govendor 来说&#xff0c;主要存在三种位置的包&#xff1a;项目自身的包组织为本地&#xff08;local&#xff09;包&#xff1b;传统的存放在 $GOPATH 下的依赖包为外部&#xff08;external&#xff09;依赖包&#xff1b;被 govendor 管理的放在 vendor 目录下的依赖包则为 vendor 包。</p> 
+<p>具体来看&#xff0c;这些包可能的类型如下&#xff1a;</p> 
+<table><thead><tr><th>状态</th><th>缩写状态</th><th>含义</th></tr></thead><tbody><tr><td>&#43;local</td><td>l</td><td>本地包&#xff0c;即项目自身的包组织</td></tr><tr><td>&#43;external</td><td>e</td><td>外部包&#xff0c;即被 $GOPATH 管理&#xff0c;但不在 vendor 目录下</td></tr><tr><td>&#43;vendor</td><td>v</td><td>已被 govendor 管理&#xff0c;即在 vendor 目录下</td></tr><tr><td>&#43;std</td><td>s</td><td>标准库中的包</td></tr><tr><td>&#43;unused</td><td>u</td><td>未使用的包&#xff0c;即包在 vendor 目录下&#xff0c;但项目并没有用到</td></tr><tr><td>&#43;missing</td><td>m</td><td>代码引用了依赖包&#xff0c;但该包并没有找到</td></tr><tr><td>&#43;program</td><td>p</td><td>主程序包&#xff0c;意味着可以编译为执行文件</td></tr><tr><td>&#43;outside</td><td> </td><td>外部包和缺失的包</td></tr><tr><td>&#43;all</td><td> </td><td>所有的包</td></tr></tbody></table>
+<p>常见的命令如下&#xff0c;格式为 <code>govendor COMMAND</code>。</p> 
+<p>通过指定包类型&#xff0c;可以过滤仅对指定包进行操作。</p> 
+<table><thead><tr><th>命令</th><th>功能</th></tr></thead><tbody><tr><td><code>init</code></td><td>初始化 vendor 目录</td></tr><tr><td><code>list</code></td><td>列出所有的依赖包</td></tr><tr><td><code>add</code></td><td>添加包到 vendor 目录&#xff0c;如 govendor add &#43;external 添加所有外部包</td></tr><tr><td><code>add PKG_PATH</code></td><td>添加指定的依赖包到 vendor 目录</td></tr><tr><td><code>update</code></td><td>从 $GOPATH 更新依赖包到 vendor 目录</td></tr><tr><td><code>remove</code></td><td>从 vendor 管理中删除依赖</td></tr><tr><td><code>status</code></td><td>列出所有缺失、过期和修改过的包</td></tr><tr><td><code>fetch</code></td><td>添加或更新包到本地 vendor 目录</td></tr><tr><td><code>sync</code></td><td>本地存在 vendor.json 时候拉去依赖包&#xff0c;匹配所记录的版本</td></tr><tr><td><code>get</code></td><td>类似 <code>go get</code> 目录&#xff0c;拉取依赖包到 vendor 目录</td></tr></tbody></table>
+<p>dep 工具</p> 
+<p>为了方便管理依赖&#xff0c;Golang 团队 2016 年 4 月开始开发了 dep 工具&#xff0c;试图进一步简化在 Golang 项目中对第三方依赖的管理。该工具目前已经被试验性支持&#xff0c;相信很快会成为官方支持的工具。</p> 
+<p>dep 目前需要 Golang 1.7&#43; 版本&#xff0c;兼容其他依赖管理工具如 glide、godep、vndr、govend、gb、gvt、govendor、glock 等。</p> 
+<p>类似于 govendor 工具&#xff0c;dep 将依赖都放在本地的 vendor 目录下&#xff0c;通过 Gopkg.toml 和 Gopkg.lock 文件来追踪依赖的状态。</p> 
+<ul><li>Gopkg.toml 文件&#xff1a;手动编写或通过 dep init 命令生成。描述了项目对第三库的依赖规则&#xff0c;例如允许的版本范围等。用户可以通过编辑该文件表达预期的依赖控制目标。</li><li>Gopkg.lock 文件&#xff1a;通过 dep init 或 dep ensure 命令自动生成。根据项目代码和 Gopkg.toml 文件&#xff0c;计算出一个符合要求的具体的依赖关系并锁定&#xff0c;其中包括每个第三方库的具体版本。vendor 目录下的依赖库需要匹配这些版本。</li></ul>
+<p>安装可以通过 go get 命令&#xff1a;</p> 
+<pre class="has"><code>$ go get -v -u github.com/golang/dep/cmd/dep
+</code></pre> 
+<p>dep 使用保持简洁的原则&#xff0c;包括四个子命令。</p> 
+<ul><li>init&#xff1a;对一个新的 Go 项目&#xff0c;初始化依赖管理&#xff0c;生成配置文件和 vendor 目录等&#xff1b;</li><li>status&#xff1a;查看当前项目依赖的状态&#xff0c;包括依赖包名称、限制范围、指定版本等。可以通过 -old 参数来只显示过期的依赖&#xff1b;</li><li>ensure&#xff1a;更新依赖&#xff0c;确保满足指定的版本条件。如果本地缺乏某个依赖&#xff0c;会自动安装&#xff1b;</li><li>version&#xff1a;显示 dep 工具的版本信息。</li></ul>
+<p>其中&#xff0c;ensure 命令最为常用&#xff0c;支持的子命令参数主要包括&#xff1a;</p> 
+<ul><li>-add&#xff1a;添加新的依赖&#xff0c;如 dep ensure -add github.com/pkg/foo&#64;^1.0.0&#xff1b;</li><li>-dry-run&#xff1a;模拟执行&#xff0c;打印参考改动但不实施&#xff1b;</li><li>-no-vendor&#xff1a;根据计算结果更新 Gopkg.lock 文件&#xff0c;但不更新 vendor 中依赖包&#xff1b;</li><li>-update&#xff1a;更新 Gopkg.lock 中的依赖到 Gopkg.toml 中允许的最新版本&#xff0c;默认同时更新 vendor 包中内容&#xff1b;</li><li>-v&#xff1a;输出调试信息方面了解执行过程&#xff1b;</li><li>-vendor-only&#xff1a;按照 Gopkg.lock 中条件更新 vendor 包中内容。</li></ul>
+<p> </p>
+            </div>
+    </div>
