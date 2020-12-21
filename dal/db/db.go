@@ -66,6 +66,7 @@ func PutArticles(articles []model.Article) error {
 			return err
 		}
 	}
+	return nil
 }
 
 // PutUsers : put users to database
@@ -76,6 +77,7 @@ func PutUsers(users []model.User) error {
 			return err
 		}
 	}
+	return nil
 }
 
 // GetArticles : get articles by id from database
@@ -90,8 +92,7 @@ func GetArticles(id int64, page int64) []model.Article {
 		if len(articles) > 5{
 			return articles[:5]
 		}
-	}
-	else {
+	} else {
 		err := Find(dbsource, Atccollection, bson.M{"id": id}, nil, &articles)
 		if err != nil {
 			log.Fatal(err)
