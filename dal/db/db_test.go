@@ -48,7 +48,7 @@ func TestPutGetArticles(t *testing.T) {
 		t.Error("Get all ariticals wrong!")
 	}
 
-	testArticles := db.GetArticles(5, 0)
+	testArticles = db.GetArticles(5, 0)
 	if len(articles) != 0 {
 		t.Error("get ariticle not exist!")
 	}

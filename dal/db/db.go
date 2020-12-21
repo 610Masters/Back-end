@@ -71,7 +71,7 @@ func PutArticles(articles []model.Article) error {
 
 // PutUsers : put users to database
 func PutUsers(users []model.User) error {
-	for i := 0; i < len(articles); i++ {
+	for i := 0; i < len(users); i++ {
 		err := Insert(dbsource, Usrcollection, users[i])
 		if err != nil {
 			return err
