@@ -87,16 +87,18 @@ func GetArticles(id int64, page int64) []model.Article {
 		if err != nil {
 			log.Fatal(err)
 		}
-		if len(articles) > 5
-			articles = articles[:5]
+		if len(articles) > 5{
+			return articles[:5]
+		}
 	}
 	else {
 		err := Find(dbsource, Atccollection, bson.M{"id": id}, nil, &articles)
 		if err != nil {
 			log.Fatal(err)
 		}
+		return articles
 	}
-	return articles
+	return nil
 }
 
 // GetUser : get users by username from database
