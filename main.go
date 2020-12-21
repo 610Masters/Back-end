@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	log.Printf("Backend started")
+	log.Printf("Backend started,Server Listening at : http://localhost:8081/\n")
 
 	router := sw.NewRouter()
 

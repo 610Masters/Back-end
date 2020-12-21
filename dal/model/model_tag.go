@@ -10,7 +10,7 @@
 package model
 
 type Tag struct {
-	Id int64 `json:"id,omitempty"`
+	Id int64 `bson:"id" json:"id,omitempty"`
 
-	Name string `json:"name,omitempty"`
+	Name string `bson:"name" json:"name,omitempty"`
 }

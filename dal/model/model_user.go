@@ -10,7 +10,7 @@
 package model
 
 type User struct {
-	Username string `json:"username,omitempty"`
+	Username string `bson:"username" json:"username,omitempty"`
 
-	Password string `json:"password,omitempty"`
+	Password string `bson:"password" json:"password,omitempty"`
 }

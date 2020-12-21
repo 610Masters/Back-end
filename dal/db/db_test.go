@@ -5,33 +5,12 @@ import (
 
 	"github.com/610masters/Backend/dal/db"
 	"github.com/610masters/Backend/dal/model"
-	"github.com/boltdb/bolt"
 )
 
-func TestInit(t *testing.T) {
+func TestPutGetUsers(t *testing.T) {
 	db.Init()
-	d, err := bolt.Open(db.GetDBPATH(), 0600, nil)
-	if err != nil {
-		t.Error("open error:", err)
-	}
-	defer d.Close()
-	d.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("article"))
-		if b == nil {
-			t.Error("bucket article doesn't exist")
-		}
-		b = tx.Bucket([]byte("user"))
-		if b == nil {
-			t.Error("bucket user doesn't exist")
-		}
-		return nil
-	})
-}
-
-func TestPutUsers(t *testing.T) {
-	db.Init()
-	u0 := model.User{"testUser1", "123456"}
-	u1 := model.User{"testUser2", "123456"}
+	u0 := model.User{"testUser1", "testpwd"}
+	u1 := model.User{"testUser2", "testpwd"}
 
 	users := []model.User{u0, u1}
 
@@ -40,53 +19,37 @@ func TestPutUsers(t *testing.T) {
 		t.Error(err)
 	}
 
-	u2 := db.GetUser("testUser1")
-
-	if u2.Password != u0.Password {
-		t.Error("data error")
+	if db.GetUser("testUser1").Password != u0.Password {
+		t.Error("GetUsers error")
 	}
 
-	u3 := db.GetUser("testUser2")
-
-	if u3.Password != u1.Password {
-		t.Error("data error")
+	if db.GetUser("testUser2").Password != u1.Password {
+		t.Error("GetUsers error")
 	}
 }
 
 func TestPutGetArticles(t *testing.T) {
 	db.Init()
-	a0 := model.Article{0, "title0", "", nil, "2019-16-6", "content0", nil}
-	a1 := model.Article{1, "title0", "", nil, "2020-01-03", "content1", nil}
-	articles := []model.Article{a0, a1}
+	atc0 := model.Article{0, "title0", "", nil, "2020-12-21", "content0", nil}
+	atc1 := model.Article{1, "title0", "", nil, "2020-06-03", "content1", nil}
+	articles := []model.Article{atc0, atc1}
 	err := db.PutArticles(articles)
 	if err != nil {
 		t.Error(err)
 	}
 
-	dbArticles := db.GetArticles(1, 0)
-	if len(dbArticles) != 1 {
-		t.Error("len(dbArticles) != 1")
-	}
-	if dbArticles[0].Id != 1 {
-		t.Error("dbArticles[0].Id != 1")
+	testArticles := db.GetArticles(1, 0)
+	if len(testArticles) != 1||testArticles[0].Id != 1{
+		t.Error("Get one aritical wrong!")
 	}
 
-	dbArticles = db.GetArticles(-1, 2)
-	if len(dbArticles) != 2 {
-		t.Error("len(dbArticles) != 2")
+	testArticles = db.GetArticles(-1, 2)
+	if len(testArticles) != 2||testArticles[0].Id != 0||testArticles[1].Id != 1 {
+		t.Error("Get all ariticals wrong!")
 	}
-	if dbArticles[0].Id != 0 {
-		t.Error("dbArticles[0].Id != 0")
-	}
-	if dbArticles[1].Id != 1 {
-		t.Error("dbArticles[1].Id != 1")
 
-	}
-}
-
-func TestGetNULLArticle(t *testing.T) {
-	articles := db.GetArticles(12, 0)
+	testArticles := db.GetArticles(5, 0)
 	if len(articles) != 0 {
-		t.Error("len(articles) != 0")
+		t.Error("get ariticle not exist!")
 	}
 }

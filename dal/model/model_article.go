@@ -10,17 +10,17 @@
 package model
 
 type Article struct {
-	Id int64 `json:"id,omitempty"`
+	Id int64 `bson:"id" json:"id,omitempty"`
 
-	Title string `json:"title,omitempty"`
+	Title string `bson:"title" json:"title,omitempty"`
 
-	Username string `json:"username,omitempty"`
+	Username string `bson:"username" json:"username,omitempty"`
 
-	Tags []Tag `json:"tags,omitempty"`
+	Tags []Tag `bson:"tags" json:"tags,omitempty"`
 
-	Date string `json:"date,omitempty"`
+	Date string `bson:"date" json:"date,omitempty"`
 
-	Content string `json:"content,omitempty"`
+	Content string `bson:"content" json:"content,omitempty"`
 
-	Comments []Comment `json:"comments,omitempty"`
+	Comments []Comment `bson:"comments" json:"comments,omitempty"`
 }

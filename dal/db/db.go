@@ -1,192 +1,111 @@
 package db
 
 import (
-	"encoding/binary"
-	"encoding/json"
 	"log"
-	"os"
-	"path"
-
-	"runtime"
 
 	"github.com/610masters/Backend/dal/model"
-	"github.com/boltdb/bolt"
+	"github.com/globalsign/mgo"
+	"github.com/globalsign/mgo/bson"
 )
 
-func GetDBPATH() string {
-	ostype := runtime.GOOS
-	if ostype == "windows" {
-		pt, _ := os.Getwd()
-		return pt + "\\dal\\db\\Blog.db"
-	}
-	return path.Join(os.Getenv("GOPATH"), "src", "github.com", "610masters", "Backend", "dal", "db", "Blog.db")
-}
+const (
+	host   = "127.0.0.1:27017"
+	dbsource = "Articles"
+	username   = "service_test"
+	password   = "123456"
+
+	Atccollection = "ArticleData"
+	Usrcollection = "Users"
+)
+var globalS *mgo.Session
+
+// Initialize the database and the function needed
 func Init() {
-	db, err := bolt.Open(GetDBPATH(), 0600, nil)
-	if err != nil {
-		log.Fatal(err)
+	dialInfo := &mgo.DialInfo{
+		Addrs:    []string{host},
+		Source:   dbsource,
+		Username: username,
+		Password: password,
 	}
-	defer db.Close()
-
-	err = db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("article"))
-		if b == nil {
-			_, err := tx.CreateBucket([]byte("article"))
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
-
-		b = tx.Bucket([]byte("user"))
-		if b == nil {
-			_, err := tx.CreateBucket([]byte("user"))
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
-		return nil
-	})
+	s, err := mgo.DialWithInfo(dialInfo)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln("create session error ", err)
 	}
-
+	globalS = s
 }
 
-// PutArticles : put articles to article of blog.db
-//
+func connect(db, collection string) (*mgo.Session, *mgo.Collection) {
+	mgoSess := globalS.Copy()
+	mgoCollec := mgoSess.DB(db).C(collection)
+	return mgoSess, mgoCollec
+}
+
+func Insert(db, collection string, docs ...interface{}) error {
+	ms, mc := connect(db, collection)
+	defer ms.Close()
+	return mc.Insert(docs...)
+}
+
+func Find(db, collection string, query, selector, result interface{}) error {
+	ms, mc := connect(db, collection)
+	defer ms.Close()
+	return mc.Find(query).Select(selector).One(result)
+}
+
+func FindAll(db, collection string, query, selector, result interface{}) error {
+	ms, mc := connect(db, collection)
+	defer ms.Close()
+	return mc.Find(query).Select(selector).All(result)
+}
+
+// PutArticles : put articles to database
 func PutArticles(articles []model.Article) error {
-	db, err := bolt.Open(GetDBPATH(), 0600, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	err = db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("article"))
-		if b != nil {
-			for i := 0; i < len(articles); i++ {
-				id := articles[i].Id
-				key := make([]byte, 8)
-				binary.LittleEndian.PutUint64(key, uint64(id))
-				data, _ := json.Marshal(articles[i])
-				b.Put(key, data)
-			}
+	for i := 0; i < len(articles); i++ {
+		err := Insert(dbsource, Atccollection, articles[i])
+		if err != nil {
+			return err
 		}
-		return nil
-	})
-
-	if err != nil {
-		return err
 	}
-	return nil
 }
 
+// PutUsers : put users to database
 func PutUsers(users []model.User) error {
-	db, err := bolt.Open(GetDBPATH(), 0600, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	err = db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("user"))
-		if b != nil {
-			for i := 0; i < len(users); i++ {
-				username := users[i].Username
-				data, _ := json.Marshal(users[i])
-				b.Put([]byte(username), data)
-			}
+	for i := 0; i < len(articles); i++ {
+		err := Insert(dbsource, Usrcollection, users[i])
+		if err != nil {
+			return err
 		}
-		return nil
-	})
-
-	if err != nil {
-		return err
 	}
-	return nil
 }
 
-// GetArticles 根据article_id 获取article
-// 如果id == -1 表示获取所有articles
-// return []Article. if not found, len(articles)==0
+// GetArticles : get articles by id from database
+// if id == -1 ,find all articles and only return 'page' articles
 func GetArticles(id int64, page int64) []model.Article {
-	articles := make([]model.Article, 0)
-	db, err := bolt.Open(GetDBPATH(), 0600, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	err = db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("article"))
-		if b != nil && id >= 0 {
-
-			key := make([]byte, 8)
-			binary.LittleEndian.PutUint64(key, uint64(id))
-			data := b.Get(key)
-			if data != nil {
-
-				atc := model.Article{}
-				err := json.Unmarshal(data, &atc)
-				if err != nil {
-					log.Fatal(err)
-				}
-				articles = append(articles, atc)
-			}
-
-		} else if b != nil && id == -1 {
-			cursor := b.Cursor()
-			nPerPage := 5
-			fromKey := make([]byte, 8)
-			binary.LittleEndian.PutUint64(fromKey, uint64(page-1)*(uint64)(nPerPage+1))
-
-			for k, v := cursor.Seek(fromKey); k != nil && nPerPage > 0; k, v = cursor.Next() {
-				atc := model.Article{}
-				err := json.Unmarshal(v, &atc)
-				if err != nil {
-					log.Fatal(err)
-				}
-				articles = append(articles, atc)
-				nPerPage--
-			}
+	var articles []model.Article
+	if id == -1 {
+		err := FindAll(dbsource, Atccollection, nil, nil, &articles)
+		if err != nil {
+			log.Fatal(err)
 		}
-		return nil
-	})
-	if err != nil {
-		log.Fatal(err)
+		if len(articles) > 5
+			articles = articles[:5]
 	}
-
+	else {
+		err := Find(dbsource, Atccollection, bson.M{"id": id}, nil, &articles)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 	return articles
 }
 
+// GetUser : get users by username from database
 func GetUser(username string) model.User {
-	db, err := bolt.Open(GetDBPATH(), 0600, nil)
+	var result model.User
+	err := Find(dbsource, Usrcollection, bson.M{"username": username}, nil, &result)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
-
-	user := model.User{
-		Username: "",
-		Password: "",
-	}
-
-	err = db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("user"))
-		if b != nil {
-			data := b.Get([]byte(username))
-			if data != nil {
-				err := json.Unmarshal(data, &user)
-				if err != nil {
-					log.Fatal(err)
-				}
-			}
-		}
-		return nil
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return user
+	return result
 }
+

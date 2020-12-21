@@ -10,11 +10,11 @@
 package model
 
 type Comment struct {
-	User string `json:"user,omitempty"`
+	User string `bson:"user" json:"user,omitempty"`
 
-	ArticleId int64 `json:"article_id,omitempty"`
+	ArticleId int64 `bson:"article_id" json:"article_id,omitempty"`
 
-	Date string `json:"date,omitempty"`
+	Date string `bson:"date" json:"date,omitempty"`
 
-	Content string `json:"content,omitempty"`
+	Content string `bson:"content" json:"content,omitempty"`
 }
