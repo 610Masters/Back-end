@@ -35,15 +35,25 @@ func NewRouter() *mux.Router {
 		var handler http.Handler
 		handler = route.HandlerFunc
 		handler = Logger(handler, route.Name)
-
-		router.
-			Methods(route.Method).
-			Path(route.Pattern).
-			Name(route.Name).
-			Handler(handler)
+		router.Methods(route.Method).Path(route.Pattern).Name(route.Name).Handler(handler)
 	}
 
 	return router
+}
+
+func init() {
+	apiMethodbind("Index", "GET", "/", Index)
+	apiMethodbind("ArticleIdCommentsGet", "GET", "/article/{id}/comments", ArticleIdCommentsGet)
+	apiMethodbind("ArticleIdGet", "GET", "/article/{id}", ArticleIdGet)
+	apiMethodbind("ArticlesGet", "GET", "/articles", ArticlesGet)
+	apiMethodbind("ArticleIdCommentPost", "POST", "/article/{id}/comment", ArticleIdCommentPost)
+	apiMethodbind("Options", "OPTIONS", "/article/{id}/comment", Options)
+	apiMethodbind("UserLoginPost", "POST", "/user/login", UserLoginPost)
+	apiMethodbind("UserRegisterPost", "POST", "/user/register", UserRegisterPost)
+}
+
+func apiMethodbind(name string, method string, pattern string, handlerFunc http.HandlerFunc) {
+	Routes = append(Routes, Route{name, method, pattern, handlerFunc})
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
@@ -54,62 +64,3 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	index, _ := ioutil.ReadAll(f)
 	fmt.Fprintf(w, string(index))
 }
-
-var routes = Routes{
-	Route{
-		"Index",
-		"GET",
-		"/",
-		Index,
-	},
-
-	Route{
-		"ArticleIdCommentsGet",
-		strings.ToUpper("Get"),
-		"/article/{id}/comments",
-		ArticleIdCommentsGet,
-	},
-
-	Route{
-		"ArticleIdGet",
-		strings.ToUpper("Get"),
-		"/article/{id}",
-		ArticleIdGet,
-	},
-
-	Route{
-		"ArticlesGet",
-		strings.ToUpper("Get"),
-		"/articles",
-		ArticlesGet,
-	},
-
-	Route{
-		"ArticleIdCommentPost",
-		strings.ToUpper("Post"),
-		"/article/{id}/comment",
-		ArticleIdCommentPost,
-	},
-
-	Route{
-		"Options",
-		strings.ToUpper("options"),
-		"/article/{id}/comment",
-		Options,
-	},
-
-	Route{
-		"UserLoginPost",
-		strings.ToUpper("Post"),
-		"/user/login",
-		UserLoginPost,
-	},
-
-	Route{
-		"UserRegisterPost",
-		strings.ToUpper("Post"),
-		"/user/register",
-		UserRegisterPost,
-	},
-}
-
