@@ -27,11 +27,11 @@ type Route struct {
 	HandlerFunc http.HandlerFunc
 }
 
-type Routes []Route
+var Routes []Route
 
 func NewRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
-	for _, route := range routes {
+	for _, route := range Routes {
 		var handler http.Handler
 		handler = route.HandlerFunc
 		handler = Logger(handler, route.Name)
