@@ -15,7 +15,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/gorilla/mux"
 )
